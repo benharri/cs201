@@ -1,0 +1,168 @@
+Listing PG1.cpp...
+
+//Ben Harris
+//This program converts decimal to dozenal.
+
+#include <iostream> //import
+#include <string>
+#include <cstdlib>
+#include <sstream>
+#include "PG1.h"
+using namespace std;
+
+//main method runs at execution time
+int main (int argc, char **argv) { //signature
+	cout << "Enter a number in decimal:  ";
+	string input;
+	getline (cin,input);
+	cout << input << " in dozenal is " << dozenal (input) << endl;
+	system ("pause");
+	return 0;
+}
+//this method divides by 12 and returns the quotient, to be stored
+string div12 (string dividend, int &remainder) {
+
+	int save = 0;
+	string quotient = "";
+
+	for (int i = 0 ; i < dividend.length() ; i++){
+
+		if(save != 0){
+
+			save = (save * 10) + (dividend[i]-'0');
+			int j = save/12; //divide by 12
+			char c = j+'0'; //convert to char
+			quotient = quotient+c;
+			save = save%12;
+
+		}
+		else {
+			save = dividend[i]-'0';
+			quotient += '0';
+		}
+	}
+	remainder = save;
+	return quotient;
+}
+//this method calls the div12 method and stores each remainders as the next digit
+string dozenal (string input) {
+
+	string dozenalNumber = "";
+	int remainder = 0;
+
+	while( atoi(div12(input,remainder).c_str()) != 0 ) {
+
+		input = div12(input,remainder);
+
+		char remainderChar;
+
+		if(remainder == 10){
+			remainderChar = 'A';
+		}else if (remainder == 11){
+			remainderChar = 'B';
+		}else remainderChar = remainder+'0';
+
+		dozenalNumber = remainderChar+dozenalNumber;
+
+	}
+
+
+		input = div12(input,remainder);
+
+		char remainderChar = remainder;
+
+		if(remainder == 10){
+			remainderChar = 'A';
+		}else if (remainder == 11){
+			remainderChar = 'B';
+		}else remainderChar = remainder+'0';
+
+		dozenalNumber = remainderChar+dozenalNumber;
+
+	return dozenalNumber;
+}
+
+
+Listing PG1.h...
+
+//Ben Harris
+//this is the header file...
+
+#ifndef _PG1_
+#define _PG1_
+
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <sstream>
+using namespace std;
+
+int main (int argc, char **argv); //prototype
+string div12 (string dividend, int &remainder);
+string dozenal (string input);
+
+
+#endif
+
+
+Microsoft Windows [Version 6.1.7601]
+Copyright (c) 2009 Microsoft Corporation.  All rights reserved.
+
+C:\Users\apoe\Desktop\Grading Folder>cppcompileall PG1.exe
+Microsoft Windows [Version 6.1.7601]
+Copyright (c) 2009 Microsoft Corporation.  All rights reserved.
+
+C:\Users\apoe\Desktop\Grading Folder>"C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\vcvarsall.bat" x86
+Setting environment for using Microsoft Visual Studio 2010 x86 tools.
+
+C:\Users\apoe\Desktop\Grading Folder>cl /Tp "PG1.cpp" /O2 /EHsc /W2 /Za /link /OUT:PG1.exe
+PG1.cpp
+Microsoft (R) Incremental Linker Version 10.00.40219.01
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+/out:PG1.exe
+/OUT:PG1.exe
+PG1.obj
+
+C:\Users\apoe\Desktop\Grading Folder>Microsoft (R) 32-bit C/C++ Optimizing Compiler Version 16.00.40219.01 for 80x86
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+
+C:\Users\apoe\Desktop\Grading Folder>PG1.exe < "C:\Grading\Classes\CS201-01-14F\PG1\PG1-1.in"
+Enter a number in decimal:  1728 in dozenal is 1000
+Press any key to continue . . .
+
+C:\Users\apoe\Desktop\Grading Folder>PG1.exe < "C:\Grading\Classes\CS201-01-14F\PG1\PG1-2.in"
+Enter a number in decimal:  1729 in dozenal is 1001
+Press any key to continue . . .
+
+C:\Users\apoe\Desktop\Grading Folder>PG1.exe < "C:\Grading\Classes\CS201-01-14F\PG1\PG1-3.in"
+Enter a number in decimal:  1727 in dozenal is BBB
+Press any key to continue . . .
+
+C:\Users\apoe\Desktop\Grading Folder>PG1.exe < "C:\Grading\Classes\CS201-01-14F\PG1\PG1-4.in"
+Enter a number in decimal:  10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 in dozenal is 11626240A2A9A68B90086BB42431626701401797184068A243B6A038A8465B48641A615192A2141B2079125A247896551826247B30A702664818943A268377699237A78A151BBA632B56394A5A0850B7B6A8A62B8533ABB07904A7B0687741B266917257836B09625367341624B9B00281B9608134B6465130A43AB0695BA9647B7959A1B7973473B689539BAB49897B3227971023891953739A49938B577780452155B91B4074B938934159B889330686BA823470770774330B8B60469B9BAB629812B19278A95A7BBA58AAA527208119768B545408560B41A922A69045A712A7A5054
+Press any key to continue . . .
+
+C:\Users\apoe\Desktop\Grading Folder>PG1.exe < "C:\Grading\Classes\CS201-01-14F\PG1\PG1-5.in"
+Enter a number in decimal:  828179745220145502584084235957368498016122811853894435464201864103254919330121223037770283296858019385573376 in dozenal is 10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+Press any key to continue . . .
+
+C:\Users\apoe\Desktop\Grading Folder>PG1.exe < "C:\Grading\Classes\CS201-01-14F\PG1\PG1-6.in"
+Enter a number in decimal:  828179745220145502584084235957368498016122811853894435464201864103254919330121223037770283296858019385573377 in dozenal is 10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001
+Press any key to continue . . .
+
+C:\Users\apoe\Desktop\Grading Folder>PG1.exe < "C:\Grading\Classes\CS201-01-14F\PG1\PG1-7.in"
+Enter a number in decimal:  0 in dozenal is 0
+Press any key to continue . . .
+
+C:\Users\apoe\Desktop\Grading Folder>PG1.exe < "C:\Grading\Classes\CS201-01-14F\PG1\PG1-8.in"
+Enter a number in decimal:  828179745220145502584084235957368498016122811853894435464201864103254919330121223037770283296858019385573375 in dozenal is BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+Press any key to continue . . .
+
+C:\Users\apoe\Desktop\Grading Folder>exit
+
+I probably wouldn't use atoi at all.  It may not always correctly end
+the loop, but you're getting the right answers.
+
+50/50.

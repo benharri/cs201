@@ -1,0 +1,154 @@
+Listing PG6.cpp...
+
+// Ben Harris
+// Main: Program6
+
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <algorithm>
+#include <fstream>
+#include "PG6.h"
+using namespace std;
+
+int main(int argc, char **argv){
+	string fn = "";
+	cout << "Enter the name of the file that you want to sort." << endl << "<<";
+	getline(cin, fn);
+	ifstream f (fn);
+	char ch = ' ';
+	char* s = new char[5];
+	f.read(s, 4);
+	s[4] = 0;
+	int sortsz = atoi(s);
+	f.seekg(0, f.end);
+	int end = (int)f.tellg();
+	int cct = end - sortsz;
+	int stringcnt = cct / sortsz;
+
+	f.seekg(4, f.beg);
+
+	char * allrecords = new char[sortsz];
+	int pos = 0;
+	while (true){
+		allrecords[pos] = f.get();
+		if (f.eof())break;
+		pos++;
+	}
+	string allrecordstr = (string)allrecords;
+	string * record_a = new string[stringcnt];
+	for (int i = 0, p = 0; i < cct; p++, i += sortsz){
+		record_a[p] = allrecordstr.substr(i, sortsz);
+	}
+	shellsort(record_a, stringcnt);
+	for (int r = 0; r < stringcnt; r++){
+		f >> record_a[r];
+	}
+	/*int d = stringcnt;
+	while (d > 1){
+		d = (d == 2) ? 1 : d % 2 == 1 ? (d + 1) / 2 : d % 4 == 0 ? d / 2 + 1 : d / 2 + 2;
+		for (int i = d; i < stringcnt; i++)
+			for (int j = i - d; j >= 0; j -= d);
+			for (int q = 0; q < sortsz; q++);
+	}*/
+
+	cout << "There were " << stringcnt << " records in the file, each of size " << sortsz << endl;
+
+	system("pause");
+}
+
+void shellsort(string* s, int sz){
+	int d = sz;
+	while (d > 1){
+		d = (d == 2) ? 1 : d % 2 == 1 ? (d + 1) / 2 : d % 4 == 0 ? d / 2 + 1 : d / 2 + 2;
+		for (int i = d; i < sz; i++)
+			for (int j = i - d; j >= 0 && s[j] > s[j + d]; j -= d){
+				string t = s[j];
+				s[j] = s[j + d];
+				s[j + d] = t;
+			}
+	}
+}
+
+
+
+Listing PG6.h...
+
+// Ben Harris
+// Header for program 6
+
+#ifndef _PG6_
+#define _PG6_
+
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <fstream>
+using namespace std;
+
+int main(int argc, char **argv);
+void shellsort(string* s, int sz);
+
+#endif
+
+
+Microsoft Windows [Version 6.1.7601]
+Copyright (c) 2009 Microsoft Corporation.  All rights reserved.
+
+C:\Users\apoe\Desktop\Grading Folder>cppcompileall PG6.exe
+Microsoft Windows [Version 6.1.7601]
+Copyright (c) 2009 Microsoft Corporation.  All rights reserved.
+
+C:\Users\apoe\Desktop\Grading Folder>"C:\Program Files\Microsoft Visual Studio 10.0\VC\vcvarsall.bat" x86
+Setting environment for using Microsoft Visual Studio 2010 x86 tools.
+
+C:\Users\apoe\Desktop\Grading Folder>cl /Tp "PG6.cpp" /O2 /EHsc /W2 /Za /link /OUT:PG6.exe
+PG6.cpp
+Microsoft (R) Incremental Linker Version 10.00.40219.01
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+/out:PG6.exe
+/OUT:PG6.exe
+PG6.obj
+
+C:\Users\apoe\Desktop\Grading Folder>Microsoft (R) 32-bit C/C++ Optimizing Compiler Version 16.00.40219.01 for 80x86
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+
+C:\Users\apoe\Desktop\Grading Folder>copy /y "C:\Grading\Classes\CS201-02-14F\PG6\test1.txt" .
+        1 file(s) copied.
+
+C:\Users\apoe\Desktop\Grading Folder>PG6.exe < "C:\Grading\Classes\CS201-02-14F\PG6\PG6-1.in"
+Enter the name of the file that you want to sort.
+<<
+C:\Users\apoe\Desktop\Grading Folder>cmp test1.txt C:\Grading\Classes\CS201-02-14F\PG6\test1.out
+Files differ on line 1:5.
+
+C:\Users\apoe\Desktop\Grading Folder>
+C:\Users\apoe\Desktop\Grading Folder>copy /y "C:\Grading\Classes\CS201-02-14F\PG6\test2.txt" .
+        1 file(s) copied.
+
+C:\Users\apoe\Desktop\Grading Folder>PG6.exe < "C:\Grading\Classes\CS201-02-14F\PG6\PG6-2.in"
+Enter the name of the file that you want to sort.
+<<There were 88 records in the file, each of size 1
+Press any key to continue . . .
+
+C:\Users\apoe\Desktop\Grading Folder>cmp test2.txt C:\Grading\Classes\CS201-02-14F\PG6\test2.out
+Files differ on line 1:5.
+
+C:\Users\apoe\Desktop\Grading Folder>
+C:\Users\apoe\Desktop\Grading Folder>copy /y "C:\Grading\Classes\CS201-02-14F\PG6\test3.txt" .
+        1 file(s) copied.
+
+C:\Users\apoe\Desktop\Grading Folder>PG6.exe < "C:\Grading\Classes\CS201-02-14F\PG6\PG6-3.in"
+Enter the name of the file that you want to sort.
+<<
+C:\Users\apoe\Desktop\Grading Folder>cmp test3.txt C:\Grading\Classes\CS201-02-14F\PG6\test3.out
+Files differ on line 1:5.
+
+C:\Users\apoe\Desktop\Grading Folder>
+C:\Users\apoe\Desktop\Grading Folder>exit
+
+Crashes every time.
+
+5/50.

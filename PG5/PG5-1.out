@@ -1,0 +1,481 @@
+Listing ArrayLL.h...
+
+//Ben Harris
+//Template for an linked list that can be used as an array.
+//Operator overload does not yet properly return the pointer for each node.
+
+#ifndef _ARRAYLL_
+#define _ARRAYLL_
+
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include "ArrayLLN.h"
+using namespace std;
+
+template <class T> class ArrayLL{
+private:
+	ArrayLLN<T> * head;
+public:
+	ArrayLL();
+	~ArrayLL();
+	void add(T s,T l);
+	int length();
+	void remove(int i);
+	void remove_0(T s);
+	T& operator[] (const int i);
+	void print();
+	void sort();
+	T at(int i);
+	void push(T s);
+};
+
+template <class T>
+ArrayLL<T>::ArrayLL(){
+
+	head = NULL;
+}
+
+template <class T>
+ArrayLL<T>::~ArrayLL(){
+
+	delete head;
+}
+
+template <class T>
+void ArrayLL<T>::add(T s,T l){
+
+	if (head && head->getcontents() == l) return;
+	if (!head || converttolower(head->getcontents()) > l) head = new ArrayLLN<T>(s, head);
+	else head = head->insert(s, l);
+}
+
+template <class T>
+int ArrayLL<T>::length(){
+
+	int cnt = 0;
+	ArrayLLN<T> *P = head, *Q = nullptr;
+	for (; P != nullptr; cnt++, Q = P, P = P->getnext());
+	return cnt;
+}
+
+template <class T>
+void ArrayLL<T>::remove(int i)
+{
+	int cnt = 0;
+	ArrayLLN<T> *P = NULL;
+	for (; cnt < i; cnt++, P = P->getnext());
+	P = P->remove(P);
+}
+
+template <class T>
+void ArrayLL<T>::remove_0(T s){
+
+	if (head) head = head->remove_0(s, nullptr);
+}
+
+template <class T>
+T ArrayLL<T>::at(int i){
+
+	ArrayLLN<T>* P = head;
+	for (int cnt = 0; cnt < i; cnt++, P = P->getnext());
+	return P->getcontents();
+}
+
+template <class T>
+T& ArrayLL<T>::operator[](const int i){
+
+	return *at(i);
+}
+
+template <class T>
+void ArrayLL<T>::print(){
+	if (head) {
+		sort(); head->print();
+	}
+}
+
+template <class T>
+void ArrayLL<T>::sort(){
+	if (head){
+		ArrayLLN<T>* current = head;
+		ArrayLLN<T>* prev = nullptr;
+		ArrayLLN<T>* end = head;
+		for(; end; end = end->getnext());
+		ArrayLLN<T>* tempnode = nullptr;
+		bool flag = false;
+		for (int i = 0; i < this->length(); i++){
+			while (current->getnext()){
+				tempnode = current->getnext();
+				if (current->getcontents() > tempnode->getcontents()){
+					flag = true;
+					current->setnext(tempnode->getnext());
+					tempnode->setnext(current);
+					if (prev)
+						prev->setnext(tempnode);
+					prev = tempnode;
+					if (head == current)
+						head = tempnode;
+					if (!current->getnext())
+						end = current;
+
+				}else{
+					prev = current;
+					current = current->getnext();
+				}
+			}
+			if (!flag)
+				break;
+			else{
+				prev = nullptr;
+				current = head;
+				flag = false;
+			}
+		}
+	}
+}
+
+
+
+template <class T>
+void ArrayLL<T>::push(T s){
+	ArrayLLN<T>* temp = head;
+	head = new ArrayLLN<T>(s, temp);
+}
+#endif
+
+
+Listing ArrayLLN.h...
+
+//Ben Harris
+//List Node Template
+
+#ifndef _ARRAYLLN_
+#define _ARRAYLLN_
+
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include "PG5.h"
+#include "ArrayLL.h"
+using namespace std;
+
+template <class T> class ArrayLLN{
+private:
+	T contents;
+	ArrayLLN *next;
+public:
+	ArrayLLN::ArrayLLN(T t, ArrayLLN* n){
+
+		contents = t;
+		next = n;
+	}
+
+	ArrayLLN::~ArrayLLN(){
+
+		delete next;
+	}
+
+	void ArrayLLN::setcontents(T s){
+		contents = s;
+	}
+
+	T ArrayLLN::getcontents(){
+
+		return contents;
+	}
+
+	ArrayLLN * ArrayLLN::getnext(){
+
+		return next;
+	}
+
+	void ArrayLLN::setnext(ArrayLLN* s){
+
+		next = s;
+	}
+
+	ArrayLLN * ArrayLLN::add(T s, T l){
+
+		string lvalue = converttolower(contents);
+		if (lvalue == l)return this;
+		if (l < lvalue) return new ArrayLLN(s, this);
+		if (!next){ next = new ArrayLLN(s, nullptr); return this; }
+		next = next->add(s, l);
+		return this;
+	}
+
+
+
+	ArrayLLN * ArrayLLN::remove(ArrayLLN* s){
+
+		if (next) remove(s);
+		ArrayLLN* temp = s;
+		delete s;
+		this->setnext(temp);
+		return temp;
+	}
+
+	ArrayLLN * ArrayLLN::remove_0(string s, ArrayLLN<T> *prev){
+		string lvalue = converttolower(contents);
+		if (next) next = next->remove_0(s, this);
+		if (lvalue.find(s) < contents.length() && lvalue.find(s) >= 0){
+			ArrayLLN<T> *t = next;
+			next = nullptr;
+			delete this;
+			return t;
+		}
+		return this;
+	}
+
+	void ArrayLLN::print(){
+		cout << contents << endl;
+		if (next) next->print();
+	}
+};
+
+#endif
+
+
+Listing PG5.cpp...
+
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include "PG5.h"
+#include "ArrayLL.h"
+using namespace std;
+
+int main(int argc, char **argv){
+
+	string input = "";
+	cout << "cLibrary Version 1.0 -- type help for a list of commands" << endl;
+	ArrayLL<string>* list = new ArrayLL<string>();
+	while (converttolower(input).substr(0, 4) != "exit"){
+		cout << "Enter command: ";
+		getline(cin, input);
+		string lower = converttolower(input);
+		if (lower.substr(0, 3) == "add"){
+
+			list->push(input.substr(5,input.length()-7));
+		}
+		if (lower.substr(0, 5) == "print"){
+			//list->sort();
+			list->print();
+			cout << endl << "There are " << list->length() << " items in the library." << endl;
+		}
+		if (lower.substr(0, 6) == "remove") list->remove_0(lower.substr(8, input.length() - 9));
+		if (list && lower.substr(0, 5) == "clear"){ delete list; ArrayLL<string>* list = new ArrayLL<string>(); }
+
+
+		/*if (lower.substr(0, 3) == "add") list->add(input.substr(5, input.length() - 6), lower.substr(5, input.length() - 6));
+		if (lower.substr(0, 6) == "remove") list->remove_0(lower.substr(8, input.length() - 9));
+		if (lower == "print") list->print();
+		if (list && lower == "clear") { delete list; ArrayLL<string> * list = new ArrayLL<string>(); }*/
+
+		if (lower.substr(0, 4) == "help" || lower.substr(0, 4) == "halp"){
+			cout << endl << "These are the commands that this program accepts: " << endl << endl;
+			cout << "add \"book title\" \t--adds a new entry with book title as the name" << endl;
+			cout << "remove \"search term\" \t--deletes all books that contain search term" << endl;
+			cout << "print \t\t\t--prints out the entire library in alphabetical order" << endl;
+			cout << "clear \t\t\t--clears the entire library" << endl;
+			cout << "exit \t\t\t--exits the program (also clears the library)" << endl << endl;
+		}
+	}
+	delete list;
+	return 0;
+}
+
+string converttolower(string s){for (unsigned int i = 0; i < s.length(); i++) s[i] = tolower(s[i]); return s;}
+
+
+Listing PG5.h...
+
+// Ben Harris
+// Header for PG5
+
+#ifndef _PG5_
+#define _PG5_
+
+#include<iostream>
+#include<string>
+#include<cstdlib>
+using namespace std;
+
+int main(int argc, char **argv); // Main...
+string converttolower(string s); // Returns a version of the input string all lower case.
+
+
+#endif
+
+
+Microsoft Windows [Version 6.1.7601]
+Copyright (c) 2009 Microsoft Corporation.  All rights reserved.
+
+C:\Users\apoe\Desktop\Grading Folder>cppcompileall PG5.exe
+Microsoft Windows [Version 6.1.7601]
+Copyright (c) 2009 Microsoft Corporation.  All rights reserved.
+
+C:\Users\apoe\Desktop\Grading Folder>"C:\Program Files\Microsoft Visual Studio 10.0\VC\vcvarsall.bat" x86
+Setting environment for using Microsoft Visual Studio 2010 x86 tools.
+
+C:\Users\apoe\Desktop\Grading Folder>cl /Tp "PG5.cpp" /O2 /EHsc /W2 /Za /link /OUT:PG5.exe
+PG5.cpp
+Microsoft (R) Incremental Linker Version 10.00.40219.01
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+/out:PG5.exe
+/OUT:PG5.exe
+PG5.obj
+
+C:\Users\apoe\Desktop\Grading Folder>Microsoft (R) 32-bit C/C++ Optimizing Compiler Version 16.00.40219.01 for 80x86
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+
+C:\Users\apoe\Desktop\Grading Folder>PG5.exe < "C:\Grading\Classes\CS201-01-14F\PG5\PG5-1.in"
+cLibrary Version 1.0 -- type help for a list of commands
+Enter command:
+There are 0 items in the library.
+Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+There are 31 items in the library.
+Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+There are 31 items in the library.
+Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Mostly Harmles
+The Restaurant At The End Of The Univers
+
+There are 33 items in the library.
+Enter command: Enter command:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+There are 31 items in the library.
+Enter command:
+C:\Users\apoe\Desktop\Grading Folder>exit
+
+Just getting started.
+
+10/50.
+
+Fix by Monday 17 November 2014.
+

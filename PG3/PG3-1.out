@@ -1,0 +1,269 @@
+Listing List.cpp...
+
+//Ben Harris
+//List.cpp defines the methods for a List
+
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include "List.h"
+#include "Node.h"
+using namespace std;
+
+List::List(){
+	head = NULL;
+}
+List::~List(){
+	delete head;
+}
+void List::add(string s){
+	if (head == NULL)head = new Node(s, NULL);
+	else head->add(s);
+}
+void List::print(){
+	int maxcnt = 0;
+	Node* n = head;
+	while (n != NULL){
+		if (n->getcount() > maxcnt) maxcnt = n->getcount();
+		n = n->getnext();
+	}
+	cout << endl << "<<Commonest Words>>"<<endl<<endl;
+	n = head;
+	while (n != NULL){
+		if (n->getcount() == maxcnt) cout << n->getvalue() << endl;
+		n = n->getnext();
+	}cout << endl;
+}
+
+
+Listing List.h...
+
+//Ben Harris
+//Header file for prototypes of List methods
+
+#ifndef _LIST_
+#define _LIST_
+
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include "Node.h"
+using namespace std;
+
+class Node;
+class List{
+private: // Each list contains only the pointer to its head Node.
+	Node *head;
+public:
+	List(); // List Constructor
+	~List(); // List Destructor
+	void add(string s); // Adds a Node to the tail of the list, incrementing the counter if a duplicate string is entered.
+	void print(); // Loops through the array twice: once to find the highest count, then a second time to print each Node that has that count value.
+};
+
+#endif
+
+
+Listing Node.cpp...
+
+//Ben Harris
+//Node.cpp contains the code for each node
+
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include "Node.h"
+using namespace std;
+
+Node::Node(string s, Node *n){
+	cnt = 1;
+	value = s;
+	next = n;
+}
+Node::~Node(){
+	delete next;
+	cnt = 0;
+	//farewell
+}
+string Node::getvalue(){
+	return value;
+}
+int Node::getcount(){
+	return cnt;
+}
+Node * Node::getnext(){
+	return next;
+}
+void Node::add(string s){
+	if (value == s)cnt++;
+	else if (next == NULL) next = new Node(s, NULL);
+	else next->add(s);
+}
+
+
+Listing Node.h...
+
+//Ben Harris
+//Node.h is a header file for Node methods
+
+#ifndef _NODE_
+#define _NODE_
+
+#include <iostream>
+#include <string>
+#include <cstdlib>
+using namespace std;
+
+class Node{
+private: // Each Node contains a vale, count, and a pointer to the next Node in the list.
+	string value;
+	int cnt;
+	Node *next;
+public:
+	Node(string s, Node *n); // Node Constructor
+	~Node(); // Node Destructor
+	string getvalue(); // Value accessor
+	int getcount(); // Count accessor
+	Node * getnext(); // Next pointer accessor
+	void add(string s); // Adds a new Node to a list, incrementing the count for a Node if the same string is entered more than once.
+};
+
+#endif
+
+
+Listing PG3.cpp...
+
+//Ben Harris
+//This program builds a list based on user input and prints the
+//most commonly entered words, printing all in the case of a tie.
+
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include "PG3.h"
+#include "List.h"
+using namespace std;
+
+int main(int argc, char **argv){
+	string input =" ";
+	List * list = new List();
+	while (input!=""){
+		cout << "Input<<";
+		getline(cin, input);
+		if(input!="")list->add(input);
+	}
+	list->print();
+	delete list;
+	return 0;
+}
+
+
+Listing PG3.h...
+
+//Ben Harris
+//Header file for PG3
+
+#ifndef _PG3_
+#define _PG3_
+
+#include <iostream>
+#include <string>
+#include <cstdlib>
+using namespace std;
+
+int main(int argc, char **argv);// Main method.
+
+#endif
+
+
+Microsoft Windows [Version 6.1.7601]
+Copyright (c) 2009 Microsoft Corporation.  All rights reserved.
+
+C:\Users\apoe\Desktop\Grading Folder>cppcompileall PG3.exe
+Microsoft Windows [Version 6.1.7601]
+Copyright (c) 2009 Microsoft Corporation.  All rights reserved.
+
+C:\Users\apoe\Desktop\Grading Folder>"C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\vcvarsall.bat" x86
+Setting environment for using Microsoft Visual Studio 2010 x86 tools.
+
+C:\Users\apoe\Desktop\Grading Folder>cl /Tp "List.cpp" /Tp "Node.cpp" /Tp "PG3.cpp" /O2 /EHsc /W2 /Za /link /OUT:PG3.exe
+List.cpp
+Node.cpp
+PG3.cpp
+Generating Code...
+Microsoft (R) Incremental Linker Version 10.00.40219.01
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+/out:List.exe
+/OUT:PG3.exe
+List.obj
+Node.obj
+PG3.obj
+
+C:\Users\apoe\Desktop\Grading Folder>Microsoft (R) 32-bit C/C++ Optimizing Compiler Version 16.00.40219.01 for 80x86
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+
+C:\Users\apoe\Desktop\Grading Folder>PG3.exe < "C:\Grading\Classes\CS201-02-14F\PG3\PG3-1.in"
+Input<<Input<<Input<<Input<<Input<<Input<<
+<<Commonest Words>>
+
+apple
+banana
+
+
+C:\Users\apoe\Desktop\Grading Folder>PG3.exe < "C:\Grading\Classes\CS201-02-14F\PG3\PG3-2.in"
+Input<<Input<<Input<<Input<<Input<<Input<<Input<<Input<<Input<<Input<<Input<<Input<<Input<<Input<<Input<<Input<<Input<<Input<<Input<<Input<<Input<<Input<<Input<<Input<<Input<<Input<<Input<<Input<<Input<<Input<<Input<<Input<<Input<<Input<<Input<<Input<<Input<<Input<<Input<<Input<<Input<<Input<<Input<<Input<<Input<<Input<<Input<<Input<<Input<<Input<<Input<<Input<<Input<<
+<<Commonest Words>>
+
+q
+w
+e
+r
+t
+y
+u
+i
+o
+p
+a
+s
+d
+f
+g
+h
+j
+k
+l
+z
+x
+c
+v
+b
+n
+m
+
+
+C:\Users\apoe\Desktop\Grading Folder>PG3.exe < "C:\Grading\Classes\CS201-02-14F\PG3\PG3-3.in"
+Input<<
+<<Commonest Words>>
+
+
+
+C:\Users\apoe\Desktop\Grading Folder>PG3.exe < "C:\Grading\Classes\CS201-02-14F\PG3\PG3-4.in"
+Input<<Input<<Input<<Input<<Input<<Input<<Input<<Input<<Input<<
+<<Commonest Words>>
+
+SAW
+
+
+C:\Users\apoe\Desktop\Grading Folder>PG3.exe < "C:\Grading\Classes\CS201-02-14F\PG3\PG3-5.in"
+Input<<Input<<
+<<Commonest Words>>
+
+ONLY
+
+
+C:\Users\apoe\Desktop\Grading Folder>exit
+
+50/50.

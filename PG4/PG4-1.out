@@ -1,0 +1,363 @@
+Listing List.cpp...
+
+//Ben Harris
+//List.cpp defines the methods for a List
+
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include "List.h"
+#include "Node.h"
+using namespace std;
+
+List::List(){
+	head = NULL;
+}
+List::~List(){
+	delete head;
+}
+void List::add(string s){
+	if (head && head->getvalue() == s) return;
+	if (!head || head->getvalue() > s)head = new Node(s, head);
+	else head = head->add(s);
+}
+
+void List::print(){
+
+	cout << endl << "Library List" << endl << endl;
+	if (head) head->print();
+	cout << endl;
+}
+
+void List::remove(string s){
+	if (head) head = head->remove(s, nullptr, this);
+}
+
+void List::sethead(Node * n){ head = n; }
+
+
+
+Listing List.h...
+
+//Ben Harris
+//Header file for prototypes of List methods
+
+#ifndef _LIST_
+#define _LIST_
+
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include "Node.h"
+using namespace std;
+
+class Node;
+class List{
+private: // Each list contains only the pointer to its head Node.
+	Node *head;
+public:
+	List(); // List Constructor
+	~List(); // List Destructor
+	void add(string s); // Adds a Node to the tail of the list, incrementing the counter if a duplicate string is entered.
+	void print(); // Loops through the array twice: once to find the highest count, then a second time to print each Node that has that count value.
+	void remove(string s); // Calls remove on the nodes that match string s
+	void sethead(Node* n); // Head mutator
+};
+
+#endif
+
+
+Listing Node.cpp...
+
+//Ben Harris
+//Node.cpp contains the code for each node
+
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include "Node.h"
+#include "List.h"
+using namespace std;
+
+Node::Node(string s, Node *n){
+	value = s;
+	next = n;
+}
+Node::~Node(){delete next;}
+string Node::getvalue(){return value;}
+int Node::getcount(){return cnt;}
+Node * Node::getnext(){return next;}
+void Node::setnext(Node *n){ next = n; }
+
+Node * Node::add(string s){
+	if (value == s)return this;
+	if (value > s) return new Node(s, this);
+	if (!next){ next = new Node(s, nullptr); return this; }
+	next = next->add(s);
+	return this;
+}
+
+void Node::print(){
+	cout << value << endl;
+	if (next) next->print();
+}
+
+Node* Node::remove(string s, Node *prev, List *l){
+
+	if (next) next = next->remove(s, this, l);
+	if (value.find(s) < value.length() && value.find(s) >= 0)
+	{
+		Node *t = next;
+		next = nullptr;
+		delete this;
+		return t;
+	}
+	return this;
+}
+
+
+
+Listing Node.h...
+
+//Ben Harris
+//Node.h is a header file for Node methods
+
+#ifndef _NODE_
+#define _NODE_
+
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include "List.h"
+using namespace std;
+
+class List;
+class Node{
+private: // Each Node contains a value, count, and a pointer to the next Node in the list.
+	string value;
+	int cnt;
+	Node *next;
+public:
+	Node(string s, Node *n); // Node Constructor
+	~Node(); // Node Destructor
+	string getvalue(); // Value accessor
+	int getcount(); // Count accessor
+	Node * getnext(); // Next pointer accessor
+	void setnext(Node* n); // Next pointer mutator
+	Node * add(string s); // Adds a new Node to a list, incrementing the count for a Node if the same string is entered more than once.
+	void print(); // Tells each node to print itself and its next
+	Node* remove(string s, Node *prev, List *l); // Remove the nodes with matching string s and returns the new head
+};
+
+#endif
+
+
+Listing PG4.cpp...
+
+//Ben Harris
+//This program manages a library of books by title, stored in a linked list
+
+#include<iostream>
+#include<string>
+#include<cstdlib>
+#include<cctype>
+#include "PG4.h"
+#include "List.h"
+using namespace std;
+
+int main(int argc, char **argv){
+	string input = " ";
+	List * list = new List();
+	cout << "cLibrary Version 1.0 -- type help for a list of commands" << endl;
+	while (converttolower(input) != "exit"){
+
+		cout << "Enter command: ";
+		getline(cin, input);
+		string lower = converttolower(input);
+		if (lower.substr(0, 3) == "add") list->add(input.substr(5, input.length() - 6));
+		if (lower.substr(0, 6) == "remove") list->remove(lower.substr(8, input.length() - 9));
+		if (lower == "print") list->print();
+		if (list && lower == "clear") {delete list; List * list = new List();}
+		if (lower == "help"){
+			cout << endl << "These are the commands that this program accepts: " << endl << endl;
+			cout << "add \"book title\" \t--adds a new entry with book title as the name" << endl;
+			cout << "remove \"search term\" \t--deletes all books that contain search term" << endl;
+			cout << "print \t\t\t--prints out the entire library in alphabetical order" << endl;
+			cout << "clear \t\t\t--clears the entire library" << endl;
+			cout << "exit \t\t\t--exits the program (also clears the library)" << endl << endl;
+		}
+	}
+	delete list;
+	return 0;
+}
+
+string converttolower(string s){
+	for (int i = 0; i < s.length(); i++) s[i] = tolower(s[i]); return s;
+}
+
+
+Listing PG4.h...
+
+// Ben Harris
+// Header for PG4
+
+#ifndef _PG4_
+#define _PG4_
+
+#include<iostream>
+#include<string>
+#include<cstdlib>
+using namespace std;
+
+int main(int argc, char **argv); // Main...
+string converttolower(string s); // Used to convert strings to lower, since tolower() only converts one char at a time
+
+#endif
+
+
+Microsoft Windows [Version 6.1.7601]
+Copyright (c) 2009 Microsoft Corporation.  All rights reserved.
+
+C:\Users\apoe\Desktop\Grading Folder>cppcompileall PG4.exe
+Microsoft Windows [Version 6.1.7601]
+Copyright (c) 2009 Microsoft Corporation.  All rights reserved.
+
+C:\Users\apoe\Desktop\Grading Folder>"C:\Program Files\Microsoft Visual Studio 10.0\VC\vcvarsall.bat" x86
+Setting environment for using Microsoft Visual Studio 2010 x86 tools.
+
+C:\Users\apoe\Desktop\Grading Folder>cl /Tp "List.cpp" /Tp "Node.cpp" /Tp "PG4.cpp" /O2 /EHsc /W2 /Za /link /OUT:PG4.exe
+List.cpp
+Node.cpp
+PG4.cpp
+Generating Code...
+Microsoft (R) Incremental Linker Version 10.00.40219.01
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+/out:List.exe
+/OUT:PG4.exe
+List.obj
+Node.obj
+PG4.obj
+
+C:\Users\apoe\Desktop\Grading Folder>Microsoft (R) 32-bit C/C++ Optimizing Compiler Version 16.00.40219.01 for 80x86
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+
+C:\Users\apoe\Desktop\Grading Folder>PG4.exe < "C:\Grading\Classes\CS201-01-14F\PG4\PG4-1.in"
+cLibrary Version 1.0 -- type help for a list of commands
+Enter command:
+Library List
+
+
+Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command:
+Library List
+
+A
+D
+E
+F
+G
+H
+J
+K
+L
+Q
+R
+S
+T
+W
+X
+b
+c
+e
+i
+m
+n
+o
+p
+q
+r
+t
+u
+v
+w
+y
+z
+
+Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command:
+Library List
+
+A
+D
+E
+F
+G
+H
+J
+K
+L
+Q
+R
+S
+T
+W
+X
+m
+n
+o
+p
+q
+r
+t
+u
+v
+w
+y
+z
+
+Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command: Enter command:
+Library List
+
+A
+D
+E
+F
+G
+H
+J
+K
+L
+Mostly Harmless
+Q
+R
+S
+T
+The Hitchhiker's Guide To The Galaxy
+The Restaurant At The End Of The Universe
+W
+X
+m
+n
+o
+p
+q
+r
+t
+u
+v
+w
+y
+z
+
+Enter command: Enter command:
+Library List
+
+
+Enter command:
+C:\Users\apoe\Desktop\Grading Folder>exit
+
+Wrong answers due to not implementing case insensitivity.
+
+25/50.
+
+Fix by Friday 31 October 2014.

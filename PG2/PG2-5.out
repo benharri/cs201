@@ -1,0 +1,381 @@
+Listing PG2.cpp...
+
+//Ben Harris
+//This program shuffles a deck of cards, deals ten hands of five,
+//then checks for poker hands excluding straight, flush, and straight flush
+
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include "time.h"
+#include "PG2.h"
+using namespace std;
+
+int main (int argc, char **argv){//main method
+	//initialize deck and randomize it
+	srand((unsigned)time(0));
+	int *deck = new int[52];
+	for(int i=0;i<52;i++){
+		deck[i]=i;
+	}
+	shuffle(deck);
+
+	//start to deal the hands
+	for(int j = 0; j<10;j++){//deals ten hands
+
+		int rankcount[13] = {0};
+		for(int i = j*5;i<j*5+5;i++){//print, then check each hand for duplicates
+			rankcount[deck[i]/4]++;
+			cout << getRankName(deck[i]) << " of " << getSuitName(deck[i]) << endl;
+
+		}
+		cout<<endl;
+		if (inArray(rankcount, 2, 13) && inArray(rankcount, 3, 13))cout << "FULL HOUSE";
+		else if (dupeinarray(rankcount, 2, 13))cout << "TWO PAIR";
+		else if (inArray(rankcount, 4, 13))cout << "FOUR OF A KIND";
+		else if (inArray(rankcount, 3, 13))cout << "THREE OF A KIND";
+		else if(inArray(rankcount,2,13))cout<<"ONE PAIR";
+		else cout<<"NOTHING";
+		cout<<endl;
+		cout<<endl;
+
+	}
+	//remove systempause before turning in
+	//system("pause");
+	delete[] deck;
+	return 0;
+}
+
+string getSuitName(int card){//returns the suit of the input card
+	string suits[4] = {"Hearts","Clubs","Diamonds","Spades"};
+	return suits[card%4];
+}
+string getRankName(int card){//returns the rank of the input card
+	string ranks[13] = {"Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Jack","Queen","King","Ace"};
+	return ranks[card/4];
+}
+void swapTwo(int a, int b,int *d){//swaps two ints a and b within an array d
+	d[b] = d[a]+d[b];
+	d[a] = d[b]-d[a];
+	d[b] = d[b]-d[a];
+}
+void shuffle(int *d){//swaps each element with a random index at or before the current index, shuffling the deck
+	for(int i = 1; i<52;i++){
+		int r = rand()%(i+1);
+		swapTwo(i,r,d);
+	}
+}
+bool inArray(int *d,int toinsert, int sz){//returns true if toinsert is found in array d; checks only up to size
+	for(int i = 0; i<sz;i++){
+		if(toinsert == d[i])return true;
+	}return false;
+}
+bool dupeinarray(int *d, int dupetocheck, int sz){//checks for duplicate dupetocheck in array d
+	int cnt = 0;
+	for (int i = 0; i < sz; i++){
+		if (d[i] == dupetocheck)cnt++;
+	}
+	if (cnt > 1)return true;
+	else return false;
+}
+
+
+Listing PG2.h...
+
+//Ben Harris
+//Header file for PG2
+
+#ifndef _PG2_
+#define _PG2_
+
+#include <iostream>
+#include <string>
+#include <cstdlib>
+using namespace std;
+
+int main (int argc, char **argv);
+string getSuitName(int card);
+string getRankName(int card);
+void swapTwo(int a, int b,int *d);
+void shuffle(int *d);
+bool inArray(int *d,int toinsert, int sz);
+bool dupeinarray(int *d, int dupetocheck, int sz);
+#endif
+
+
+Microsoft Windows [Version 6.1.7601]
+Copyright (c) 2009 Microsoft Corporation.  All rights reserved.
+
+C:\Users\apoe\Desktop\Grading Folder>cppcompileall PG2.exe
+Microsoft Windows [Version 6.1.7601]
+Copyright (c) 2009 Microsoft Corporation.  All rights reserved.
+
+C:\Users\apoe\Desktop\Grading Folder>"C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\vcvarsall.bat" x86
+Setting environment for using Microsoft Visual Studio 2010 x86 tools.
+
+C:\Users\apoe\Desktop\Grading Folder>cl /Tp "PG2.cpp" /O2 /EHsc /W2 /Za /link /OUT:PG2.exe
+PG2.cpp
+Microsoft (R) Incremental Linker Version 10.00.40219.01
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+/out:PG2.exe
+/OUT:PG2.exe
+PG2.obj
+
+C:\Users\apoe\Desktop\Grading Folder>Microsoft (R) 32-bit C/C++ Optimizing Compiler Version 16.00.40219.01 for 80x86
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+
+C:\Users\apoe\Desktop\Grading Folder>PG2.exe
+Jack of Diamonds
+Four of Clubs
+Six of Clubs
+Two of Clubs
+Nine of Clubs
+
+NOTHING
+
+Ten of Clubs
+Four of Hearts
+Two of Spades
+Queen of Diamonds
+Queen of Spades
+
+ONE PAIR
+
+Three of Clubs
+Ace of Diamonds
+Ten of Spades
+Ace of Spades
+Seven of Diamonds
+
+ONE PAIR
+
+Seven of Hearts
+Three of Diamonds
+Ace of Clubs
+Five of Diamonds
+Eight of Diamonds
+
+NOTHING
+
+Seven of Spades
+Queen of Hearts
+Ace of Hearts
+Nine of Diamonds
+King of Spades
+
+NOTHING
+
+Nine of Hearts
+Ten of Diamonds
+Nine of Spades
+Jack of Hearts
+Two of Hearts
+
+ONE PAIR
+
+Eight of Clubs
+Ten of Hearts
+Two of Hearts
+King of Diamonds
+Six of Hearts
+
+NOTHING
+
+Four of Diamonds
+Three of Hearts
+Six of Spades
+Three of Spades
+King of Hearts
+
+ONE PAIR
+
+King of Clubs
+Two of Hearts
+Six of Diamonds
+Five of Clubs
+Five of Hearts
+
+ONE PAIR
+
+Jack of Spades
+Eight of Hearts
+Eight of Spades
+Five of Spades
+Jack of Clubs
+
+TWO PAIR
+
+
+C:\Users\apoe\Desktop\Grading Folder>start /wait timeout 2
+
+C:\Users\apoe\Desktop\Grading Folder>PG2.exe
+Six of Clubs
+Ten of Hearts
+Nine of Clubs
+King of Hearts
+Ace of Hearts
+
+NOTHING
+
+Queen of Spades
+Six of Diamonds
+Jack of Hearts
+Seven of Hearts
+Eight of Hearts
+
+NOTHING
+
+Four of Hearts
+Two of Diamonds
+Four of Clubs
+Ace of Spades
+Five of Spades
+
+ONE PAIR
+
+Jack of Diamonds
+Five of Hearts
+Eight of Spades
+Seven of Spades
+Jack of Spades
+
+ONE PAIR
+
+Queen of Clubs
+King of Diamonds
+Five of Diamonds
+Eight of Clubs
+Two of Spades
+
+NOTHING
+
+Jack of Clubs
+Queen of Hearts
+Four of Diamonds
+Nine of Diamonds
+Ten of Clubs
+
+NOTHING
+
+Ace of Clubs
+Four of Spades
+Three of Spades
+Ten of Diamonds
+Seven of Diamonds
+
+NOTHING
+
+Two of Hearts
+Eight of Diamonds
+Six of Hearts
+King of Clubs
+Two of Hearts
+
+ONE PAIR
+
+Three of Diamonds
+Ace of Diamonds
+Three of Hearts
+King of Spades
+Five of Clubs
+
+ONE PAIR
+
+Three of Clubs
+Two of Clubs
+Nine of Hearts
+Ten of Spades
+Queen of Diamonds
+
+NOTHING
+
+
+C:\Users\apoe\Desktop\Grading Folder>start /wait timeout 2
+
+C:\Users\apoe\Desktop\Grading Folder>PG2.exe
+Six of Spades
+Queen of Spades
+Ten of Hearts
+Five of Hearts
+King of Hearts
+
+NOTHING
+
+Seven of Clubs
+Three of Clubs
+Four of Spades
+Jack of Hearts
+King of Diamonds
+
+NOTHING
+
+Ace of Clubs
+Eight of Diamonds
+Seven of Diamonds
+Ten of Diamonds
+Ace of Spades
+
+ONE PAIR
+
+Nine of Hearts
+Seven of Spades
+Jack of Spades
+Six of Hearts
+Ten of Clubs
+
+NOTHING
+
+Ace of Diamonds
+Eight of Hearts
+Five of Diamonds
+Eight of Clubs
+Four of Hearts
+
+ONE PAIR
+
+Six of Clubs
+Two of Hearts
+Six of Diamonds
+Four of Clubs
+Three of Hearts
+
+ONE PAIR
+
+Four of Diamonds
+Jack of Diamonds
+Jack of Clubs
+Two of Hearts
+Two of Spades
+
+TWO PAIR
+
+Ace of Hearts
+Nine of Clubs
+King of Clubs
+Two of Hearts
+Three of Diamonds
+
+NOTHING
+
+Two of Hearts
+Two of Hearts
+Eight of Spades
+Nine of Diamonds
+Five of Clubs
+
+ONE PAIR
+
+Ten of Spades
+King of Spades
+Seven of Hearts
+Three of Spades
+Queen of Diamonds
+
+NOTHING
+
+
+C:\Users\apoe\Desktop\Grading Folder>exit
+
+50/50.

@@ -1,0 +1,388 @@
+Listing PG2.cpp...
+
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include "time.h"
+#include "PG2.h"
+using namespace std;
+
+int main (int argc, char **argv){
+	srand((unsigned)time(0));
+	int *deck = new int[52];
+	for(int i=0;i<52;i++){
+		deck[i]=i;
+	}
+	shuffle(deck);
+	int *hand = new int[5];
+	for(int j = 0; j<10;j++){//deals ten hands
+
+		int foundcount =0;
+		int rankfound =-1;
+		int secondarycount=0;
+		for(int i = j*5;i<j*5+5;i++){//process, check each hand for duplicates
+			int rank = deck[i]/4;
+			cout << getRankName(deck[i]) << " of " << getSuitName(deck[i]) << endl;
+
+			if(inArray(hand,rank,i)){
+				if(rank!=rankfound && i != 0)secondarycount++;
+				else {
+				rankfound=rank;
+				foundcount++;
+
+				}
+			}else{
+				//hand[i] = (deck[i])/4;
+			}
+		}
+		cout<<endl;
+		if(foundcount>0)cout<<"ONE PAIR";
+		else if(foundcount>1)cout<<"THREE OF A KIND";
+		else if(foundcount>2)cout<<"FOUR OF A KIND";
+
+		cout<<foundcount<<endl;
+		cout<<endl;
+	}
+
+	system("pause");
+	delete[] deck;
+	return 0;
+}
+string getSuitName(int card){
+	string suits[4] = {"Hearts","Clubs","Diamonds","Spades"};
+	return suits[card%4];
+}
+string getRankName(int card){
+	string ranks[13] = {"Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Jack","Queen","King","Ace"};
+	return ranks[card/4];
+}
+void swapTwo(int a, int b,int *d){
+	d[b] = d[a]+d[b];
+	d[a] = d[b]-d[a];
+	d[b] = d[b]-d[a];
+}
+void shuffle(int *d){
+	for(int i = 0; i<52;i++){
+		if(i==0)continue;
+		int r = rand()%i;
+		swapTwo(i,r,d);
+	}
+}
+bool inArray(int *d,int toinsert, int sz){
+	for(int i = 0; i<sz;i++){
+		if(toinsert == d[i])return true;
+	}return false;
+}
+
+
+Listing PG2.h...
+
+#ifndef _PG2_
+#define _PG2_
+
+#include <iostream>
+#include <string>
+#include <cstdlib>
+using namespace std;
+
+int main (int argc, char **argv);
+string getSuitName(int card);
+string getRankName(int card);
+void swapTwo(int a, int b,int *d);
+void shuffle(int *d);
+bool inArray(int *d,int toinsert, int sz);
+
+#endif
+
+
+Microsoft Windows [Version 6.1.7601]
+Copyright (c) 2009 Microsoft Corporation.  All rights reserved.
+
+C:\Users\apoe\Desktop\Grading Folder>cppcompileall PG2.exe
+Microsoft Windows [Version 6.1.7601]
+Copyright (c) 2009 Microsoft Corporation.  All rights reserved.
+
+C:\Users\apoe\Desktop\Grading Folder>"C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\vcvarsall.bat" x86
+Setting environment for using Microsoft Visual Studio 2010 x86 tools.
+
+C:\Users\apoe\Desktop\Grading Folder>cl /Tp "PG2.cpp" /O2 /EHsc /W2 /Za /link /OUT:PG2.exe
+PG2.cpp
+Microsoft (R) Incremental Linker Version 10.00.40219.01
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+/out:PG2.exe
+/OUT:PG2.exe
+PG2.obj
+
+C:\Users\apoe\Desktop\Grading Folder>Microsoft (R) 32-bit C/C++ Optimizing Compiler Version 16.00.40219.01 for 80x86
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+
+C:\Users\apoe\Desktop\Grading Folder>PG2.exe
+Jack of Spades
+Five of Diamonds
+King of Hearts
+Eight of Hearts
+Five of Hearts
+
+0
+
+King of Clubs
+Six of Diamonds
+Eight of Diamonds
+Four of Spades
+Six of Spades
+
+0
+
+Nine of Spades
+Jack of Hearts
+Ace of Spades
+Jack of Diamonds
+Nine of Clubs
+
+0
+
+Ten of Hearts
+Three of Clubs
+Jack of Clubs
+Ten of Diamonds
+King of Diamonds
+
+0
+
+Queen of Hearts
+Nine of Hearts
+Ace of Clubs
+Queen of Diamonds
+Six of Hearts
+
+0
+
+Five of Spades
+Four of Diamonds
+Ten of Clubs
+Two of Clubs
+Five of Clubs
+
+0
+
+Queen of Clubs
+Three of Hearts
+Seven of Spades
+Three of Diamonds
+King of Spades
+
+0
+
+Four of Hearts
+Ace of Hearts
+Seven of Clubs
+Seven of Diamonds
+Two of Spades
+
+0
+
+Eight of Clubs
+Eight of Spades
+Four of Clubs
+Seven of Hearts
+Ace of Diamonds
+
+0
+
+Ten of Spades
+Three of Spades
+Two of Hearts
+Two of Diamonds
+Nine of Diamonds
+
+0
+
+Press any key to continue . . .
+
+C:\Users\apoe\Desktop\Grading Folder>tart /wait timeout 2
+'tart' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\Users\apoe\Desktop\Grading Folder>PG2.exe
+Jack of Spades
+Five of Diamonds
+King of Hearts
+Eight of Hearts
+Five of Hearts
+
+0
+
+King of Clubs
+Six of Diamonds
+Eight of Diamonds
+Four of Spades
+Six of Spades
+
+0
+
+Nine of Spades
+Jack of Hearts
+Ace of Spades
+Jack of Diamonds
+Nine of Clubs
+
+0
+
+Ten of Hearts
+Three of Clubs
+Jack of Clubs
+Ten of Diamonds
+King of Diamonds
+
+0
+
+Queen of Hearts
+Nine of Hearts
+Ace of Clubs
+Queen of Diamonds
+Six of Hearts
+
+0
+
+Five of Spades
+Four of Diamonds
+Ten of Clubs
+Two of Clubs
+Five of Clubs
+
+0
+
+Queen of Clubs
+Three of Hearts
+Seven of Spades
+Three of Diamonds
+King of Spades
+
+0
+
+Four of Hearts
+Ace of Hearts
+Seven of Clubs
+Seven of Diamonds
+Two of Spades
+
+0
+
+Eight of Clubs
+Eight of Spades
+Four of Clubs
+Seven of Hearts
+Ace of Diamonds
+
+0
+
+Ten of Spades
+Three of Spades
+Two of Hearts
+Two of Diamonds
+Nine of Diamonds
+
+0
+
+Press any key to continue . . .
+
+C:\Users\apoe\Desktop\Grading Folder>tart /wait timeout 2
+'tart' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\Users\apoe\Desktop\Grading Folder>PG2.exe
+Jack of Spades
+Five of Diamonds
+King of Hearts
+Eight of Hearts
+Five of Hearts
+
+0
+
+King of Clubs
+Six of Diamonds
+Eight of Diamonds
+Four of Spades
+Six of Spades
+
+0
+
+Nine of Spades
+Jack of Hearts
+Ace of Spades
+Jack of Diamonds
+Nine of Clubs
+
+0
+
+Ten of Hearts
+Three of Clubs
+Jack of Clubs
+Ten of Diamonds
+King of Diamonds
+
+0
+
+Queen of Hearts
+Nine of Hearts
+Ace of Clubs
+Queen of Diamonds
+Six of Hearts
+
+0
+
+Five of Spades
+Four of Diamonds
+Ten of Clubs
+Two of Clubs
+Five of Clubs
+
+0
+
+Queen of Clubs
+Three of Hearts
+Seven of Spades
+Three of Diamonds
+King of Spades
+
+0
+
+Four of Hearts
+Ace of Hearts
+Seven of Clubs
+Seven of Diamonds
+Two of Spades
+
+0
+
+Eight of Clubs
+Eight of Spades
+Four of Clubs
+Seven of Hearts
+Ace of Diamonds
+
+0
+
+Ten of Spades
+Three of Spades
+Two of Hearts
+Two of Diamonds
+Nine of Diamonds
+
+0
+
+Press any key to continue . . .
+
+C:\Users\apoe\Desktop\Grading Folder>xit
+'xit' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\Users\apoe\Desktop\Grading Folder>
+
+Not rating hands yet...and please get rid of system ("pause").
+
+10/50.
+
+Fix by Friday 26 September 2014.

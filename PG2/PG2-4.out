@@ -1,0 +1,396 @@
+Listing PG2.cpp...
+
+//Ben Harris
+//This program shuffles a deck of cards, deals ten hands of five,
+//then checks for poker hands excluding straight, flush, and straight flush
+
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include "time.h"
+#include "PG2.h"
+using namespace std;
+
+int main (int argc, char **argv){//main method
+	//initialize deck and randomize it
+	srand((unsigned)time(0));
+	int *deck = new int[52];
+	for(int i=0;i<52;i++){
+		deck[i]=i;
+	}
+	shuffle(deck);
+
+	//start to deal the hands
+	for(int j = 0; j<10;j++){//deals ten hands
+
+		int rankcount[13] = {0};
+		for(int i = j*5;i<j*5+5;i++){//print, then check each hand for duplicates
+			rankcount[deck[i]/4]++;
+			cout << getRankName(deck[i]) << " of " << getSuitName(deck[i]) << endl;
+
+		}
+		cout<<endl;
+		if (inArray(rankcount, 2, 13) && inArray(rankcount, 3, 13))cout << "FULL HOUSE";
+		else if (dupeinarray(rankcount, 2, 13))cout << "TWO PAIR";
+		else if (inArray(rankcount, 4, 13))cout << "FOUR OF A KIND";
+		else if (inArray(rankcount, 3, 13))cout << "THREE OF A KIND";
+		else if(inArray(rankcount,2,13))cout<<"ONE PAIR";
+		else cout<<"NOTHING";
+		cout<<endl;
+		cout<<endl;
+
+	}
+	//remove systempause before turning in
+	system("pause");
+	delete deck;
+	return 0;
+}
+
+string getSuitName(int card){//returns the suit of the input card
+	string suits[4] = {"Hearts","Clubs","Diamonds","Spades"};
+	return suits[card%4];
+}
+string getRankName(int card){//returns the rank of the input card
+	string ranks[13] = {"Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Jack","Queen","King","Ace"};
+	return ranks[card/4];
+}
+void swapTwo(int a, int b,int *d){//swaps two ints a and b within an array d
+	d[b] = d[a]+d[b];
+	d[a] = d[b]-d[a];
+	d[b] = d[b]-d[a];
+}
+void shuffle(int *d){//swaps each element with a random index at or before the current index, shuffling the deck
+	for(int i = 1; i<52;i++){
+		int r = rand()%(i+1);
+		swapTwo(i,r,d);
+	}
+}
+bool inArray(int *d,int toinsert, int sz){//returns true if toinsert is found in array d; checks only up to size
+	for(int i = 0; i<sz;i++){
+		if(toinsert == d[i])return true;
+	}return false;
+}
+bool dupeinarray(int *d, int dupetocheck, int sz){//checks for duplicate dupetocheck in array d
+	int cnt = 0;
+	for (int i = 0; i < sz; i++){
+		if (d[i] == dupetocheck)cnt++;
+	}
+	if (cnt > 1)return true;
+	else return false;
+}
+
+
+Listing PG2.h...
+
+//Ben Harris
+//Header file for PG2
+
+#ifndef _PG2_
+#define _PG2_
+
+#include <iostream>
+#include <string>
+#include <cstdlib>
+using namespace std;
+
+int main (int argc, char **argv);
+string getSuitName(int card);
+string getRankName(int card);
+void swapTwo(int a, int b,int *d);
+void shuffle(int *d);
+bool inArray(int *d,int toinsert, int sz);
+bool dupeinarray(int *d, int dupetocheck, int sz);
+#endif
+
+
+Microsoft Windows [Version 6.1.7601]
+Copyright (c) 2009 Microsoft Corporation.  All rights reserved.
+
+C:\Users\apoe\Desktop\Grading Folder>cppcompileall PG2.exe
+Microsoft Windows [Version 6.1.7601]
+Copyright (c) 2009 Microsoft Corporation.  All rights reserved.
+
+C:\Users\apoe\Desktop\Grading Folder>"C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\vcvarsall.bat" x86
+Setting environment for using Microsoft Visual Studio 2010 x86 tools.
+
+C:\Users\apoe\Desktop\Grading Folder>cl /Tp "PG2.cpp" /O2 /EHsc /W2 /Za /link /OUT:PG2.exe
+PG2.cpp
+Microsoft (R) Incremental Linker Version 10.00.40219.01
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+/out:PG2.exe
+/OUT:PG2.exe
+PG2.obj
+
+C:\Users\apoe\Desktop\Grading Folder>Microsoft (R) 32-bit C/C++ Optimizing Compiler Version 16.00.40219.01 for 80x86
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+
+C:\Users\apoe\Desktop\Grading Folder>PG2.exe
+Six of Clubs
+Ace of Spades
+Five of Hearts
+Ten of Clubs
+Six of Hearts
+
+ONE PAIR
+
+King of Hearts
+Two of Hearts
+Six of Diamonds
+Eight of Diamonds
+Seven of Spades
+
+NOTHING
+
+King of Clubs
+Four of Diamonds
+Seven of Diamonds
+Two of Hearts
+Jack of Hearts
+
+NOTHING
+
+Five of Clubs
+Queen of Clubs
+Nine of Spades
+Two of Diamonds
+Queen of Spades
+
+ONE PAIR
+
+Five of Diamonds
+Nine of Clubs
+Three of Diamonds
+Five of Spades
+Ten of Spades
+
+ONE PAIR
+
+Four of Spades
+Six of Spades
+Four of Hearts
+Eight of Clubs
+King of Diamonds
+
+ONE PAIR
+
+Two of Spades
+Jack of Diamonds
+Ace of Diamonds
+Seven of Clubs
+Ace of Clubs
+
+ONE PAIR
+
+Queen of Hearts
+Three of Spades
+Seven of Hearts
+Eight of Hearts
+Ace of Hearts
+
+NOTHING
+
+Ten of Hearts
+Ten of Diamonds
+Three of Clubs
+Four of Clubs
+Three of Hearts
+
+TWO PAIR
+
+Queen of Diamonds
+Jack of Clubs
+Nine of Diamonds
+Eight of Spades
+Jack of Spades
+
+ONE PAIR
+
+Press any key to continue . . .
+
+C:\Users\apoe\Desktop\Grading Folder>tart /wait timeout 2
+'tart' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\Users\apoe\Desktop\Grading Folder>PG2.exe
+Six of Clubs
+Ace of Spades
+Five of Hearts
+Ten of Clubs
+Six of Hearts
+
+ONE PAIR
+
+King of Hearts
+Two of Hearts
+Six of Diamonds
+Eight of Diamonds
+Seven of Spades
+
+NOTHING
+
+King of Clubs
+Four of Diamonds
+Seven of Diamonds
+Two of Hearts
+Jack of Hearts
+
+NOTHING
+
+Five of Clubs
+Queen of Clubs
+Nine of Spades
+Two of Diamonds
+Queen of Spades
+
+ONE PAIR
+
+Five of Diamonds
+Nine of Clubs
+Three of Diamonds
+Five of Spades
+Ten of Spades
+
+ONE PAIR
+
+Four of Spades
+Six of Spades
+Four of Hearts
+Eight of Clubs
+King of Diamonds
+
+ONE PAIR
+
+Two of Spades
+Jack of Diamonds
+Ace of Diamonds
+Seven of Clubs
+Ace of Clubs
+
+ONE PAIR
+
+Queen of Hearts
+Three of Spades
+Seven of Hearts
+Eight of Hearts
+Ace of Hearts
+
+NOTHING
+
+Ten of Hearts
+Ten of Diamonds
+Three of Clubs
+Four of Clubs
+Three of Hearts
+
+TWO PAIR
+
+Queen of Diamonds
+Jack of Clubs
+Nine of Diamonds
+Eight of Spades
+Jack of Spades
+
+ONE PAIR
+
+Press any key to continue . . .
+
+C:\Users\apoe\Desktop\Grading Folder>tart /wait timeout 2
+'tart' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\Users\apoe\Desktop\Grading Folder>PG2.exe
+Six of Clubs
+Ace of Spades
+Five of Hearts
+Ten of Clubs
+Six of Hearts
+
+ONE PAIR
+
+King of Hearts
+Two of Hearts
+Six of Diamonds
+Eight of Diamonds
+Seven of Spades
+
+NOTHING
+
+King of Clubs
+Four of Diamonds
+Seven of Diamonds
+Two of Hearts
+Jack of Hearts
+
+NOTHING
+
+Five of Clubs
+Queen of Clubs
+Nine of Spades
+Two of Diamonds
+Queen of Spades
+
+ONE PAIR
+
+Five of Diamonds
+Nine of Clubs
+Three of Diamonds
+Five of Spades
+Ten of Spades
+
+ONE PAIR
+
+Four of Spades
+Six of Spades
+Four of Hearts
+Eight of Clubs
+King of Diamonds
+
+ONE PAIR
+
+Two of Spades
+Jack of Diamonds
+Ace of Diamonds
+Seven of Clubs
+Ace of Clubs
+
+ONE PAIR
+
+Queen of Hearts
+Three of Spades
+Seven of Hearts
+Eight of Hearts
+Ace of Hearts
+
+NOTHING
+
+Ten of Hearts
+Ten of Diamonds
+Three of Clubs
+Four of Clubs
+Three of Hearts
+
+TWO PAIR
+
+Queen of Diamonds
+Jack of Clubs
+Nine of Diamonds
+Eight of Spades
+Jack of Spades
+
+ONE PAIR
+
+Press any key to continue . . .
+
+C:\Users\apoe\Desktop\Grading Folder>xit
+'xit' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\Users\apoe\Desktop\Grading Folder>
+
+Get rid of the system ("pause").  Also, use delete[] to delete an array.
+
+35/50.
+
+Fix by Wednesday 8 October 2014.

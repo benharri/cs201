@@ -1,0 +1,255 @@
+Listing ArrayLL.h...
+
+//Ben Harris
+//Template for an linked list that can be used as an array.
+
+#ifndef _ARRAYLL_
+#define _ARRAYLL_
+
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include "ArrayLLN.h"
+using namespace std;
+
+template <class T> class ArrayLL{
+private:
+	ArrayLLN<T> * head;
+public:
+	ArrayLL(){ head = NULL; }
+	~ArrayLL(){ delete head; }
+	int length(){
+		int cnt = 0;
+		for (ArrayLLN<T>*P = head; P != nullptr; cnt++, P = P->getnext());
+		return cnt;
+	}
+	void remove(int i){
+		for (int cnt = 0; cnt < i; cnt++, head = head->getnext());
+		head = head->removeself();
+	}
+	T& operator[] (const int i){
+		ArrayLLN<T>* P = head;
+		for (int cnt = 0; cnt < i; cnt++, P = P->getnext());
+		return P->getcontents();
+	}
+	void insert(int i, T stuff){
+		if (i == 0) head = new ArrayLLN<T>(stuff, head); // insert at head, with head as next pointer
+		else if (i>0 && i < length()){
+			ArrayLLN<T> *P = head, *Q = nullptr;
+			for (int j = 0; j < i-1; j++, Q = P, P = P->getnext());
+			Q->setnext(new ArrayLLN<T>(stuff, P));
+		}
+		else if (i == length())
+			if (head == NULL) head = new ArrayLLN<T>(stuff, NULL);
+			else head->addback(stuff);
+		else return;
+	}
+
+};
+
+#endif
+
+
+Listing ArrayLLN.h...
+
+//Ben Harris
+//List Node Template
+
+#ifndef _ARRAYLLN_
+#define _ARRAYLLN_
+
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include "PG5.h"
+#include "ArrayLL.h"
+using namespace std;
+
+template <class T> class ArrayLLN{
+private:
+	T contents;
+	ArrayLLN *next;
+public:
+
+	ArrayLLN(T t, ArrayLLN* n){
+		contents = t;
+		next = n;
+	}
+	~ArrayLLN(){delete next;}
+	void setcontents(T s){contents = s;}
+	T& getcontents(){return contents;}
+	ArrayLLN * getnext(){return next;}
+	void setnext(ArrayLLN* s){next = s;}
+
+	ArrayLLN * removeself(){
+		ArrayLLN<T>*temp = next;
+		this->setnext(nullptr);
+		delete this;
+		return temp;
+	}
+	void addback(T stuff){
+		if (next == NULL) next = new ArrayLLN<T>(stuff, nullptr);
+		else next->addback(stuff);
+	}
+
+};
+
+#endif
+
+
+Listing PG5.cpp...
+
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include "PG5.h"
+#include "ArrayLL.h"
+using namespace std;
+
+int main(int argc, char **argv){
+
+	string input = "";
+	cout << "cLibrary Version 1.0 -- type help for a list of commands" << endl;
+	ArrayLL<string> list;
+
+	while (converttolower(input).substr(0, 4) != "exit"){
+
+		cout << "Enter command: ";
+		getline(cin, input);
+		string lower = converttolower(input);
+
+		if (lower.substr(0, 3) == "add"){
+
+			bool found = false;
+			string lv = converttolower(input.substr(5, input.length() - 6));
+
+			for (int i = 0; i < list.length(); i++)
+				if (converttolower(list[i]) == lv){
+					cout << "That title already exists in the library." << endl;
+					found = true;
+				}
+
+			int j = 0;
+
+			//for (; converttolower(list[j]) < lv;) j++;
+			//cout << j << endl;
+
+			if (!found) list.insert(list.length(), input.substr(5, input.length() - 6));
+
+		}
+
+		if (lower.substr(0, 5) == "print"){
+			cout << endl;
+
+			//sorts(list, 0, list.length());
+
+			for (int i = 0; i < list.length(); i++)
+				cout << list[i] << endl;
+
+			cout << endl << "There are " << list.length() << " items in the library." << endl;
+		}
+
+		if (lower.substr(0, 6) == "remove"){
+			string lv = lower.substr(8, input.length() - 9);
+			for (int i = 0; i < list.length(); i++)
+				if (list[i].find(lv) >= 0 && list[i].find(lv) < list[i].length()){
+					list.remove(i);
+					cout << "Titles containing " << input.substr(8, input.length() - 9) << " were removed from the library." << endl;
+				}
+		}
+
+		if (lower.substr(0, 5) == "clear"){
+			list = {};
+			cout << endl << "Library cleared." << endl << endl;
+		}
+
+
+		if (lower.substr(0, 4) == "help" || lower.substr(0, 4) == "halp"){
+			cout << endl << "These are the commands that this program accepts: " << endl << endl;
+			cout << "add \"book title\" \t--adds a new entry with book title as the name" << endl;
+			cout << "remove \"search term\" \t--deletes all books that contain search term" << endl;
+			cout << "print \t\t\t--prints out the entire library in alphabetical order" << endl;
+			cout << "clear \t\t\t--clears the entire library" << endl;
+			cout << "exit \t\t\t--exits the program (also clears the library)" << endl << endl;
+		}
+	}
+	//delete list;
+	return 0;
+}
+
+void sorts(ArrayLL<string> arr, int left, int right){
+	int i = left, j = right;
+	string tmp;
+	string pivot = arr[(left + right) / 2];
+
+	while (i <= j){
+		while (arr[i] < pivot) i++;
+		while (arr[j] > pivot) j--;
+		if (i <= j)
+		{
+			tmp = arr[i];
+			arr[i] = arr[j];
+			arr[j] = tmp;
+			i++;
+			j--;
+		}
+	}
+	if (left < j)sorts(arr, left, j);
+	if (i < right)sorts(arr, i, right);
+}
+
+string converttolower(string s){for (unsigned int i = 0; i < s.length(); i++) s[i] = tolower(s[i]); return s;}
+
+
+Listing PG5.h...
+
+// Ben Harris
+// Header for PG5
+
+#ifndef _PG5_
+#define _PG5_
+
+#include<iostream>
+#include<string>
+#include<cstdlib>
+#include "ArrayLL.h"
+using namespace std;
+
+int main(int argc, char **argv); // Main...
+string converttolower(string s); // Returns a version of the input string all lower case.
+void sorts(ArrayLL<string> arr, int left, int right); // Quick sort ArrayLL
+
+
+#endif
+
+
+Microsoft Windows [Version 6.1.7601]
+Copyright (c) 2009 Microsoft Corporation.  All rights reserved.
+
+C:\Users\apoe\Desktop\Grading Folder>cppcompileall PG5.exe
+Microsoft Windows [Version 6.1.7601]
+Copyright (c) 2009 Microsoft Corporation.  All rights reserved.
+
+C:\Users\apoe\Desktop\Grading Folder>"C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\vcvarsall.bat" x86
+Setting environment for using Microsoft Visual Studio 2010 x86 tools.
+
+C:\Users\apoe\Desktop\Grading Folder>cl /Tp "PG5.cpp" /O2 /EHsc /W2 /Za /link /OUT:PG5.exe
+PG5.cpp
+PG5.cpp(61) : error C2059: syntax error : '{'
+PG5.cpp(61) : error C2143: syntax error : missing ';' before '{'
+
+C:\Users\apoe\Desktop\Grading Folder>Microsoft (R) 32-bit C/C++ Optimizing Compiler Version 16.00.40219.01 for 80x86
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+
+C:\Users\apoe\Desktop\Grading Folder>PG5.exe < "C:\Grading\Classes\CS201-01-14F\PG5\PG5-1.in"
+'PG5.exe' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\Users\apoe\Desktop\Grading Folder>exit
+
+DOES NOT COMPILE.
+
+5/50.
+
+Fix by Friday 21 November 2014.
